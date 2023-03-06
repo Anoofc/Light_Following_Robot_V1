@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
 // LDR sensor pins
-#define IR_LEFT A1
-#define IR_RIGHT A2
+#define LDR_LEFT A1
+#define LDR_RIGHT A2
 
 // Motor pins
 #define MOTOR_L1 2
@@ -41,11 +41,11 @@ void lt()
   digitalWrite(MOTOR_L1, LOW);
   digitalWrite(MOTOR_L2, HIGH);
   digitalWrite(MOTOR_R1, LOW);
-  digitalWrite(MOTOR_R2, HIGH);
+  digitalWrite(MOTOR_R2, LOW);
 }
 void rt()
 {
-  digitalWrite(MOTOR_L1, HIGH);
+  digitalWrite(MOTOR_L1, LOW);
   digitalWrite(MOTOR_L2, LOW);
   digitalWrite(MOTOR_R1, HIGH);
   digitalWrite(MOTOR_R2, LOW);
@@ -59,22 +59,25 @@ void st()
 }
 void loop()
 {
-
-  if ((analogRead(IR_LEFT) > 200) && (analogRead(IR_RIGHT) > 200))
-  {
-    fr();
-  }
-  else if ((analogRead(IR_LEFT) < 200) && (analogRead(IR_RIGHT) < 200))
+  Serial.print(analogRead(LDR_LEFT));
+  Serial.print("   ||   ");
+  Serial.println(analogRead(LDR_RIGHT));
+  if ((analogRead(LDR_LEFT) > 150) && (analogRead(LDR_RIGHT) > 150))
   {
     st();
   }
-
-  else if ((analogRead(IR_LEFT) < 200) && (analogRead(IR_RIGHT) > 200))
+  else if ((analogRead(LDR_LEFT) < 150) && (analogRead(LDR_RIGHT) < 150))
   {
-    lt();
+    fr();
   }
-  else if ((analogRead(IR_LEFT) > 200) && (analogRead(IR_RIGHT) < 200))
+
+  else if ((analogRead(LDR_LEFT) < 150) && (analogRead(LDR_RIGHT) > 150))
   {
     rt();
   }
+  else if ((analogRead(LDR_LEFT) > 150) && (analogRead(LDR_RIGHT) < 150))
+  {
+    lt();
+  }
+  delay(100);
 }
